@@ -4,46 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Widget</title>
-    <style>
-        #weather {
-            font-family: Arial, sans-serif;
-            background: #1f567c;
-            color: white;
-            padding: 10px;
-            width: 250px;
-            border-radius: 5px;
-            text-align: left;
-        }
-    </style>
 </head>
 <body>
-    <div id="weather">Loading weather...</div>
-
+    <a class="weatherwidget-io" href="https://forecast7.com/en/29d42n98d49/san-antonio/?unit=us" 
+       data-icons="Climacons Animated" data-mode="Current" 
+       data-days="3" data-theme="original" data-basecolor="rgba(31, 86, 124, 0)">
+       San Antonio, TX, USA
+    </a> 
     <script>
-        const apiKey = 'YOUR_API_KEY';  // Replace with your actual Weatherstack API key
-        const city = 'San Antonio'; // Change to any city
-        const url = `https://api.weatherstack.com/current?access_key=${apiKey}&query=${city}`;
-
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                const weatherDiv = document.getElementById('weather');
-                if (data.success === false) {
-                    weatherDiv.innerHTML = `<p>Error: ${data.error.info}</p>`;
-                } else {
-                    weatherDiv.innerHTML = `
-                        <h3>${data.location.name}, ${data.location.country}</h3>
-                        <p>Temperature: ${data.current.temperature}°F</p>
-                        <p>Condition: ${data.current.weather_descriptions[0]}</p>
-                        <p>Humidity: ${data.current.humidity}%</p>
-                        <p>Wind Speed: ${data.current.wind_speed} mph</p>
-                    `;
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching weather:', error);
-                document.getElementById('weather').innerHTML = '<p>Failed to load weather data.</p>';
-            });
+        !function(d,s,id){
+            var js,fjs=d.getElementsByTagName(s)[0];
+            if(!d.getElementById(id)){
+                js=d.createElement(s);
+                js.id=id;
+                js.src='https://weatherwidget.io/js/widget.min.js';
+                fjs.parentNode.insertBefore(js,fjs);
+            }
+        }(document,'script','weatherwidget-io-js');
     </script>
 </body>
 </html>
