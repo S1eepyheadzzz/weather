@@ -4,23 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Widget</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .widget {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .emoji {
+            font-size: 50px;
+            animation: bounce 1s infinite alternate;
+        }
+        @keyframes bounce {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-5px); }
+        }
+    </style>
 </head>
 <body>
-    <a class="weatherwidget-io" href="https://forecast7.com/en/29d42n98d49/san-antonio/?unit=us" 
-       data-icons="Climacons Animated" data-mode="Current" 
-       data-days="3" data-theme="original" data-basecolor="rgba(31, 86, 124, 0)">
-       San Antonio, TX, USA
-    </a> 
+    <div class="widget">
+        <h2>San Antonio, TX</h2>
+        <div id="weather">
+            <span class="emoji">⏳</span>
+            <p>Loading...</p>
+        </div>
+    </div>
+
     <script>
-        !function(d,s,id){
-            var js,fjs=d.getElementsByTagName(s)[0];
-            if(!d.getElementById(id)){
-                js=d.createElement(s);
-                js.id=id;
-                js.src='https://weatherwidget.io/js/widget.min.js';
-                fjs.parentNode.insertBefore(js,fjs);
+        async function fetchWeather() {
+            try {
+                const apiKey = '888994dc38c841f1584aef3c60556a74'; // Replace with your OpenWeather API key
+                const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=San%20Antonio&units=imperial&appid=${apiKey}`);
+                const data = response.data;
+                const temp = Math.round(data.main.temp);
+                const weather = data.weather[0].main.toLowerCase();
+                
+                let emoji = "❓";
+                if (weather.includes("clear")) emoji = "☀️";
+                else if (weather.includes("cloud")) emoji = "☁️";
+                else if (weather.includes("rain")) emoji = "🌧️";
+                else if (weather.includes("thunder")) emoji = "⛈️";
+                else if (weather.includes("snow")) emoji = "❄️";
+                
+                document.getElementById("weather").innerHTML = `
+                    <span class="emoji">${emoji}</span>
+                    <p>${temp}°F</p>
+                `;
+            } catch (error) {
+                document.getElementById("weather").innerHTML = "<p>Failed to load weather.</p>";
             }
-        }(document,'script','weatherwidget-io-js');
+        }
+
+        fetchWeather();
+        setInterval(fetchWeather, 60000); // Update every 60 seconds
     </script>
 </body>
 </html>
